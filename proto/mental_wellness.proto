@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package mental_wellness_bot;
+
+option go_package = "github.com/ramyasreetejo/mental_wellness_bot/proto;proto";
+
+service MentalWellnessBot {
+  rpc GenerateResponse (UserInput) returns (BotResponse);
+}
+
+message UserInput {
+  string message = 1;
+}
+
+message BotResponse {
+  string reply = 1;
+}
