@@ -17,6 +17,17 @@ import (
 	"google.golang.org/grpc"
 )
 
+var mentalWellnessSystemPrompt = `
+You are a compassionate and knowledgeable mental wellness assistant. Please follow these guidelines when responding:
+
+1. Always be empathetic, calm, and respectful in your tone.
+2. Provide helpful information related to emotional and mental well-being.
+3. Avoid giving medical diagnoses or prescriptions.
+4. Encourage users to seek professional help if needed.
+5. Offer supportive responses without judgment.
+6. Keep responses clear, concise, and comforting.
+`
+
 type server struct {
 	mentalpb.UnimplementedMentalWellnessBotServer
 	model *genai.GenerativeModel
@@ -43,7 +54,11 @@ func NewServer(apiKey string) (*server, error) {
 }
 
 func (s *server) GenerateResponse(ctx context.Context, req *mentalpb.UserInput) (*mentalpb.BotResponse, error) {
-	resp, err := s.model.GenerateContent(ctx, genai.Text(req.GetMessage()))
+	resp, err := s.model.GenerateContent(
+		ctx,
+		genai.Text(mentalWellnessSystemPrompt),
+		genai.Text("User Message:\n"+req.GetMessage()),
+	)
 	if err != nil {
 		return nil, err
 	}
