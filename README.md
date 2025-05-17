@@ -1,5 +1,9 @@
 # mental_wellness_bot
 
+Demo
+
+https://github.com/user-attachments/assets/675d2d20-5442-4812-96a1-0440175ad72b
+
 Project structure:
 
 ```
@@ -90,5 +94,5 @@ protoc --go_out=. --go-grpc_out=. proto/mental_wellness.proto
 go run server.go
 ```
 
--> gRPC running on localhost:50051
--> UI and REST API on http://localhost:8080
+- gRPC running on localhost:50051
+- UI and REST API on http://localhost:8080
