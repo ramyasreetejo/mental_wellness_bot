@@ -2,7 +2,7 @@
 
 Demo
 
-https://github.com/user-attachments/assets/675d2d20-5442-4812-96a1-0440175ad72b
+https://github.com/user-attachments/assets/f3fc2c76-8da8-4283-b86c-f9c5f1c03d7f
 
 Project structure:
 
