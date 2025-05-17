@@ -73,7 +73,7 @@ func (s *server) GenerateResponse(ctx context.Context, req *mentalpb.UserInput) 
 	return &mentalpb.BotResponse{Reply: reply}, nil
 }
 
-func startRestAPI(srv *server) {
+func startRestAPI(srv *server, restPort string) {
 	http.HandleFunc("/api/chat", func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
 			Message string `json:"message"`
@@ -89,8 +89,8 @@ func startRestAPI(srv *server) {
 
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 	go func() {
-		log.Println("REST server at http://localhost:8080")
-		log.Fatal(http.ListenAndServe(":8080", nil))
+		log.Println("REST server at http://localhost:" + restPort)
+		log.Fatal(http.ListenAndServe(":"+restPort, nil))
 	}()
 }
 
@@ -101,9 +101,13 @@ func main() {
 	}
 
 	apiKey := os.Getenv("GEMINI_API_KEY")
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "50051"
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "50051"
+	}
+	restPort := os.Getenv("REST_PORT")
+	if restPort == "" {
+		restPort = "8080"
 	}
 
 	srv, err := NewServer(apiKey)
@@ -116,16 +120,16 @@ func main() {
 		log.Fatalf("%v", err)
 	}
 
-	go startRestAPI(srv)
+	go startRestAPI(srv, restPort)
 
-	lis, err := net.Listen("tcp", ":"+port)
+	lis, err := net.Listen("tcp", ":"+grpcPort)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
 	mentalpb.RegisterMentalWellnessBotServer(grpcServer, srv)
 
-	log.Printf("gRPC server listening on :%s\n", port)
+	log.Printf("gRPC server listening on :%s\n", grpcPort)
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
