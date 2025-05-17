@@ -2,6 +2,7 @@
 
 Project structure:
 
+```
 mentalwellness/
 │
 ├── proto/
@@ -13,6 +14,7 @@ mentalwellness/
 ├── .env                           # Environment variables
 ├── go.mod / go.sum                # Go dependencies
 ├── server.go                      # gRPC + Gemini backend
+```
 
 Architecture:
 
@@ -26,42 +28,54 @@ Steps:
 
 1. Clone or Create Project
 
+```
 mkdir mental_wellness_bot && cd mental_wellness_bot
 go mod init github.com/ramyasreetejo/mental_wellness_bot
+```
 
 
 2. Install Required Packages
 
+```
 go get google.golang.org/grpc
 go get google.golang.org/protobuf
 go get github.com/joho/godotenv
 go get github.com/google/generative-ai-go/genai
 go get google.golang.org/api/option
+```
 
 
 3. Generate Go gRPC files after creating proto file, defining gRPC Service:
 
 To work with .proto files in a gRPC project on Mac, you'll need two main tools:
 
--> protoc – the Protocol Buffers compiler
--> protoc-gen-go – the Go plugin for protoc to generate Go code from .proto files
+- protoc – the Protocol Buffers compiler
+- protoc-gen-go – the Go plugin for protoc to generate Go code from .proto files
 
 steps to install(mac specific):
 
 --step 1--
+```
 brew install protobuf
 protoc --version
+```
 
 --step 2--
+```
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
 
 --step 3--
+```
 export PATH="$PATH:$(go env GOPATH)/bin"
+```
 
 After all dependent tools installed, run:
 
+```
 protoc --go_out=. --go-grpc_out=. proto/mental_wellness.proto
+```
 
 
 4. create server and index html files
@@ -72,7 +86,9 @@ protoc --go_out=. --go-grpc_out=. proto/mental_wellness.proto
 
 6. Run Your Bot
 
+```
 go run server.go
+```
 
 -> gRPC running on localhost:50051
 -> UI and REST API on http://localhost:8080
