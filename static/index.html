@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Mental Wellness Bot</title>
     <style>
         body { font-family: Arial; max-width: 600px; margin: 2rem auto; }
         textarea, button { width: 100%; margin: 1rem 0; padding: 10px; }
-        #response { padding: 1rem; background: #eee; border-radius: 5px; }
+        #response { padding: 1rem; background: #eee; border-radius: 5px; white-space: pre-wrap; }
     </style>
+    <!-- Include marked.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-<h2>Mental Wellness Bot 💬</h2>
-<textarea id="message" rows="4" placeholder="How are you feeling today?"></textarea>
-<button onclick="sendMessage()">Send</button>
-<div id="response"></div>
+    <h2>Mental Wellness Bot 💬</h2>
+    <textarea id="message" rows="4" placeholder="How are you feeling today?"></textarea>
+    <button onclick="sendMessage()">Send</button>
+    <div id="response"></div>
 
-<script>
-    async function sendMessage() {
-        const message = document.getElementById('message').value;
-        document.getElementById('response').innerText = "Thinking...";
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-        });
-        const data = await res.json();
-        document.getElementById('response').innerText = data.reply || "No response.";
-    }
-</script>
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById('message').value;
+            document.getElementById('response').innerText = "Thinking...";
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await res.json();
+                // Render the reply as Markdown
+                document.getElementById('response').innerHTML = data.reply ? marked.parse(data.reply) : "No response.";
+            } catch (e) {
+                document.getElementById('response').innerText = "Error: " + e.message;
+            }
+        }
+    </script>
 </body>
 </html>

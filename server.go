@@ -22,6 +22,15 @@ type server struct {
 	model *genai.GenerativeModel
 }
 
+func testGenAIModel(model *genai.GenerativeModel) error {
+	resp, err := model.GenerateContent(context.Background(), genai.Text("Test"))
+	if err != nil {
+		return fmt.Errorf("Gemini test failed: %v", err)
+	}
+	log.Println("Gemini test successful:", resp)
+	return nil
+}
+
 func NewServer(apiKey string) (*server, error) {
 	ctx := context.Background()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(apiKey))
@@ -29,7 +38,7 @@ func NewServer(apiKey string) (*server, error) {
 		return nil, fmt.Errorf("genai client error: %v", err)
 	}
 
-	model := client.GenerativeModel("gemini-pro")
+	model := client.GenerativeModel("gemini-1.5-flash")
 	return &server{model: model}, nil
 }
 
@@ -85,6 +94,11 @@ func main() {
 	srv, err := NewServer(apiKey)
 	if err != nil {
 		log.Fatalf("server init error: %v", err)
+	}
+
+	// Run test before starting servers
+	if err := testGenAIModel(srv.model); err != nil {
+		log.Fatalf("%v", err)
 	}
 
 	go startRestAPI(srv)
