@@ -85,7 +85,7 @@ protoc --go_out=. --go-grpc_out=. proto/mental_wellness.proto
 4. create server and index html files
 
 
-5. Update port and api key in .env file (fetch from https://aistudio.google.com/app/apikey)
+5. Update grpc and rest ports, api key in .env file (api key from https://aistudio.google.com/app/apikey)
 
 
 6. Run Your Bot
